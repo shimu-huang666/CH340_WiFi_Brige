@@ -29,7 +29,10 @@ static const char *TAG = "uart_events";
  * - Event queue: on
  * - Pin assignment: TxD (default), RxD (default)
  */
-
+/*
+shimu@RDC71-PC:/mnt/c/Users/admin$ sudo modprobe cdc_acm
+shimu@RDC71-PC:/mnt/c/Users/admin$ sudo chmod 666 /dev/ttyACM0
+*/
 #define EX_UART_NUM UART_NUM_0
 #define UART_TX_PIN GPIO_NUM_38
 #define UART_RX_PIN GPIO_NUM_41
@@ -38,7 +41,6 @@ static const char *TAG = "uart_events";
 #define BUF_SIZE (1024)
 #define RD_BUF_SIZE (BUF_SIZE)
 static QueueHandle_t uart0_queue;
-1123131312
 static void uart_event_task(void *pvParameters)
 {
     uart_event_t event;
