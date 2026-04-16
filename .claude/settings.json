@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls /dev/ttyUSB* /dev/ttyACM* /dev/ttyS*)",
+      "Bash(dmesg)",
+      "Bash(lsusb)",
+      "Read(//proc/**)",
+      "Bash(ls -la /dev/ttyUSB* /dev/ttyACM*)",
+      "Bash(lsmod)",
+      "Bash(modinfo ch341 *)",
+      "Bash(ls /dev/ttyUSB* /dev/ttyACM*)",
+      "Read(//sys/kernel/debug/usb/**)",
+      "Bash(modprobe cdc_acm)",
+      "Bash(ls /dev/ttyACM* /dev/ttyUSB*)",
+      "Bash(sudo modprobe *)"
+    ]
+  }
+}
