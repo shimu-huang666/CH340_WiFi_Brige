@@ -38,7 +38,7 @@ static const char *TAG = "uart_events";
 #define BUF_SIZE (1024)
 #define RD_BUF_SIZE (BUF_SIZE)
 static QueueHandle_t uart0_queue;
-
+1123131312
 static void uart_event_task(void *pvParameters)
 {
     uart_event_t event;
