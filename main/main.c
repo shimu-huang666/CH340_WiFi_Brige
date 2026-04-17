@@ -14,7 +14,9 @@
 #include "driver/uart.h"
 #include "driver/gpio.h"
 #include "esp_log.h"
+#include "nvs_flash.h"
 
+#include "wifi_connect.h"
 static const char *TAG = "uart_events";
 
 /**
@@ -34,8 +36,8 @@ shimu@RDC71-PC:/mnt/c/Users/admin$ sudo modprobe cdc_acm
 shimu@RDC71-PC:/mnt/c/Users/admin$ sudo chmod 666 /dev/ttyACM0
 */
 #define EX_UART_NUM UART_NUM_0
-#define UART_TX_PIN GPIO_NUM_38
-#define UART_RX_PIN GPIO_NUM_41
+#define UART_TX_PIN GPIO_NUM_43
+#define UART_RX_PIN GPIO_NUM_44
 #define PATTERN_CHR_NUM    (3)         /*!< Set the number of consecutive and identical characters received by receiver which defines a UART pattern*/
 
 #define BUF_SIZE (1024)
@@ -124,6 +126,14 @@ static void uart_event_task(void *pvParameters)
 
 void app_main(void)
 {
+    /* 初始化NVS Flash */
+    esp_err_t ret = nvs_flash_init();
+    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+        ESP_ERROR_CHECK(nvs_flash_erase());
+        ret = nvs_flash_init();
+    }
+    ESP_ERROR_CHECK(ret);
+
     esp_log_level_set(TAG, ESP_LOG_INFO);
 
     /* Configure parameters of an UART driver,
@@ -143,7 +153,7 @@ void app_main(void)
     //Set UART log level
     esp_log_level_set(TAG, ESP_LOG_INFO);
     //Set UART pins (using UART0 default pins ie no changes.)
-    uart_set_pin(EX_UART_NUM, GPIO_NUM_38, GPIO_NUM_41, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
+    uart_set_pin(EX_UART_NUM, UART_TX_PIN, UART_RX_PIN, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
 
     //Set uart pattern detect function.
     uart_enable_pattern_det_baud_intr(EX_UART_NUM, '+', PATTERN_CHR_NUM, 9, 0, 0);
@@ -152,4 +162,15 @@ void app_main(void)
 
     //Create a task to handler UART event from ISR
     xTaskCreate(uart_event_task, "uart_event_task", 3072, NULL, 12, NULL);
+
+
+
+    /* 如果配置的最大日志级别大于默认级别，则提高WiFi模块的日志级别
+       这对于调试WiFi问题很有用 */
+    if (CONFIG_LOG_MAXIMUM_LEVEL > CONFIG_LOG_DEFAULT_LEVEL) {
+        esp_log_level_set("wifi", CONFIG_LOG_MAXIMUM_LEVEL);
+    }
+
+    ESP_LOGI(TAG, "ESP_WIFI_MODE_STA");
+    xTaskCreate(wifi_init_sta, "wifi_init_sta", 3072, NULL, 12, NULL);
 }

@@ -1,17 +1,5 @@
 {
   "C_Cpp.intelliSenseEngine": "default",
-  "idf.port": "/dev/ttyACM0",
   "idf.flashType": "UART",
-  "idf.openOcdConfigs": [
-    "board/esp32s3-builtin.cfg"
-  ],
-  "idf.customExtraVars": {
-    "IDF_TARGET": "esp32s3"
-  },
-  "clangd.path": "/home/shimu/.espressif/tools/esp-clang/esp-18.1.2_20240912/esp-clang/bin/clangd",
-  "clangd.arguments": [
-    "--background-index",
-    "--query-driver=**",
-    "--compile-commands-dir=/home/shimu/ESP/CH340_WiFi_Brige/build"
-  ]
+  "idf.port": "/dev/ttyACM0"
 }
